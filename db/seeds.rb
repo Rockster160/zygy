@@ -5,3 +5,21 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+def random_creds
+  {email: "#{::Faker::Name.first_name.downcase}#{::Faker::Name.last_name.downcase}@email.com", password: 'password'}
+end
+
+def display_user_and_uplines(user)
+  all_uplines = user.uplines_by(100)
+  puts "#{all_uplines.map(&:id).join(' ')} : #{user.id}"
+end
+
+10.times do
+  u = User.create(random_creds)
+  display_user_and_uplines(u)
+end
+1000.times do
+  u = User.all.sample.downlines.create(random_creds)
+  display_user_and_uplines(u)
+end

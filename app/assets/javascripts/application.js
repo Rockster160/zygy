@@ -12,5 +12,20 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require turbolinks
 //= require_tree .
+
+// https://github.com/vakata/jstree#the-required-json-format
+
+$(document).ready(function() {
+  $('#user-tree').jstree();
+
+  $('#user-tree').on("changed.jstree", function (e, data) {
+    console.log(data.node.text.trim());
+  });
+
+  $('button').on('click', function () {
+    $('#user-tree').jstree(true).select_node('child_node_1');
+    $('#user-tree').jstree('select_node', 'child_node_1');
+    $.jstree.reference('#user-tree').select_node('child_node_1');
+  });
+})

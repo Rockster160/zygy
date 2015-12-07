@@ -1,1 +1,19 @@
-Hello World
+<% def generate_downlines(user) %>
+  <li><%= user.solution_number %>
+    <% if user.downlines.any? %>
+      <ul>
+        <% user.downlines.each do |downline| %>
+          <%= generate_downlines(downline) %>
+        <% end %>
+      </ul>
+    <% end %>
+  </li>
+<% end %>
+
+<div id="user-tree">
+  <ul>
+    <% User.topline.each do |top_user| %>
+      <%= generate_downlines(top_user) %>
+    <% end %>
+  </ul>
+</div>

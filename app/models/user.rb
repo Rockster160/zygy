@@ -29,26 +29,24 @@ class User < ActiveRecord::Base
 
   after_create :set_solution_number
 
-  def self.create_random
-    create(random_creds)
-  end
+  # def solution_to_integer(sol)
+  #   characters = (('0'..'9').to_a + ('A'..'Z').to_a)
+  #   mapped = sol.split('').map { |char| characters.find_index { |e| e.match( char ) } }
+  #   mapped.reverse.each_with_index.map do |val, ind|
+  #     (characters.count ** ind) * val
+  #   end.inject(&:+)
+  # end
 
-  def self.random_creds
-    {email: "#{::Faker::Name.first_name.downcase}#{::Faker::Name.last_name.downcase}@email.com", password: 'password'}
+  def self.topline
+    where(upline_id: nil)
   end
-
-  def create_random_downline
-    self.downlines.create(User.random_creds)
-  end
-
-  # top = User.find_by_email("user1@email.com"); bot = User.find_by_email("user31@email.com")
 
   #  return user that is x levels uplined
   def upline_by(x)
     x = x.to_i
     return nil unless x > 0
     u = self.upline
-    (x - 1).times { u = u.upline }
+    (x - 1).times { u.nil? ? nil : u = u.upline }.compact
     return u
   end
   # return array of users up to x levels up
@@ -56,14 +54,33 @@ class User < ActiveRecord::Base
     x = x.to_i
     return [] unless x > 0
     u = self
-    x.times.map {u = u.upline}.reverse
+    x.times.map { u.nil? ? nil : u = u.upline }.compact.reverse
+  end
+  # return array of all uplines until max
+  def all_uplines
+    uplines = []
+    next_upline = upline
+    until next_upline.nil?
+      uplines << next_upline
+      next_upline = next_upline.upline
+    end
+    uplines
   end
 
+  # return array of all downlines to lowest level
+  def all_downlines
+    return_downlines = []
+    next_downlines = downlines
+    until next_downlines.empty?
+      return_downlines += next_downlines
+      next_downlines = next_downlines.map(&:downlines).flatten
+    end
+    return_downlines
+  end
   # return array of users down every level until x levels
   def all_downlines_by(x)
     x = x.to_i
     return [] unless x > 0
-    all_downlines = []
     current_downlines = self.downlines
     current_downlines + (x - 1).times.map do
       current_downlines = current_downlines.map do |user|
@@ -75,7 +92,6 @@ class User < ActiveRecord::Base
   def downlines_by(x)
     x = x.to_i
     return [] unless x > 0
-    all_downlines = []
     current_downlines = self.downlines
     (x - 1).times do
       current_downlines = current_downlines.map do |user|
