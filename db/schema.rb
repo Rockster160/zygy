@@ -11,10 +11,38 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151206014822) do
+ActiveRecord::Schema.define(version: 20151212151526) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "games", force: true do |t|
+    t.string   "name"
+    t.string   "game_identifier"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "security_keys", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "game_id"
+    t.string   "authorization_code"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "security_keys", ["game_id"], name: "index_security_keys_on_game_id", using: :btree
+  add_index "security_keys", ["user_id"], name: "index_security_keys_on_user_id", using: :btree
+
+  create_table "user_game_scores", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "game_id"
+    t.integer  "score"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_game_scores", ["user_id"], name: "index_user_game_scores_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -32,6 +60,8 @@ ActiveRecord::Schema.define(version: 20151206014822) do
     t.string   "name"
     t.string   "solution_number"
     t.integer  "upline_id"
+    t.string   "first_name"
+    t.string   "last_name"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

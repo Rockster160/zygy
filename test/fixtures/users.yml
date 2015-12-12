@@ -18,6 +18,8 @@
 #  name                   :string(255)
 #  solution_number        :string(255)
 #  upline_id              :integer
+#  first_name             :string(255)
+#  last_name              :string(255)
 #
 
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html

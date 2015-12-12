@@ -1,5 +1,5 @@
 <% def generate_downlines(user) %>
-  <li><%= user.solution_number %>
+  <li><%= user.solution_number %> <% if user.score_for_game(1234) %>- <span style="color: red;"><%= user.score_for_game(1234).score %></span><% end %>
     <% if user.downlines.any? %>
       <ul>
         <% user.downlines.each do |downline| %>
@@ -9,6 +9,29 @@
     <% end %>
   </li>
 <% end %>
+
+<table class="table table-striped">
+  <thead>
+    <th>User</th>
+    <th>Personal</th>
+    <th>at-1st</th>
+    <th>at-2nd</th>
+    <th>at-3rd</th>
+    <th>Upline</th>
+  </thead>
+  <tbody>
+  <% User.by_scores_for_game(1234).each do |user| %>
+    <tr>
+      <td><%= user.solution_number %></td>
+      <td><%= user.score_for_game(1234).score %></td>
+      <td><%= user.scores_at_level_for_game(1, 1234) %></td>
+      <td><%= user.scores_at_level_for_game(2, 1234) %></td>
+      <td><%= user.scores_at_level_for_game(3, 1234) %></td>
+      <td><%= user.upline.try(:solution_number) %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
 
 <div id="user-tree">
   <ul>
