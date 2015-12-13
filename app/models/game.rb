@@ -11,6 +11,8 @@
 
 class Game < ActiveRecord::Base
 
+  has_many :user_game_scores
+
   def self.by_identifier(identifier)
     find_by_game_identifier(identifier)
   end

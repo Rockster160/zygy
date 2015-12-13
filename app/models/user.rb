@@ -25,7 +25,7 @@
 # avatar
 # life_cash_accumulated   \_- Do we need these? How else should it be tracked?
 # non_paid_out_cash       /
-# hierarchy_level => enum (Representative, Sr.Representative District Division Regional Sr.Regional RVP SVP NSD SNSD)
+# hierarchy_level => enum (Representative Sr.Representative District Division Regional Sr.Regional RVP SVP NSD SNSD)
 # Baseshop: All non-RVPs below you not under another RVP
 
 # Track only high scores or accumulated scores?
@@ -102,6 +102,7 @@ class User < ActiveRecord::Base
 
   #  return user that is x levels uplined
   def upline_by(x)
+    return self if x == 0
     x = x.to_i
     return nil unless x > 0
     u = self.upline
@@ -110,6 +111,7 @@ class User < ActiveRecord::Base
   end
   # return array of users up to x levels up
   def uplines_by(x)
+    return [self] if x == 0
     x = x.to_i
     return [] unless x > 0
     u = self
@@ -138,6 +140,7 @@ class User < ActiveRecord::Base
   end
   # return array of users down every level until x levels
   def all_downlines_by(x)
+    return [self] if x == 0
     x = x.to_i
     return [] unless x > 0
     current_downlines = self.downlines
@@ -149,6 +152,7 @@ class User < ActiveRecord::Base
   end
   # return array of users x levels down
   def downlines_by(x)
+    return [self] if x == 0
     x = x.to_i
     return [] unless x > 0
     current_downlines = self.downlines

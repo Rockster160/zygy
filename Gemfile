@@ -14,6 +14,7 @@ gem 'sidekiq'
 gem 'sidekiq-cron'
 gem 'autoprefixer-rails'
 gem 'faker'
+gem 'font-awesome-rails'
 
 group :development, :test do
   gem 'annotate'

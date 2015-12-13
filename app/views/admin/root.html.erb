@@ -1,42 +1,38 @@
-<% def generate_downlines(user) %>
-  <li><%= user.solution_number %> <% if user.score_for_game(1234) %>- <span style="color: red;"><%= user.score_for_game(1234).score %></span><% end %>
-    <% if user.downlines.any? %>
-      <ul>
-        <% user.downlines.each do |downline| %>
-          <%= generate_downlines(downline) %>
-        <% end %>
-      </ul>
-    <% end %>
-  </li>
-<% end %>
-
-<table class="table table-striped">
-  <thead>
-    <th>User</th>
-    <th>Personal</th>
-    <th>at-1st</th>
-    <th>at-2nd</th>
-    <th>at-3rd</th>
-    <th>Upline</th>
-  </thead>
-  <tbody>
-  <% User.by_scores_for_game(1234).each do |user| %>
-    <tr>
-      <td><%= user.solution_number %></td>
-      <td><%= user.score_for_game(1234).score %></td>
-      <td><%= user.scores_at_level_for_game(1, 1234) %></td>
-      <td><%= user.scores_at_level_for_game(2, 1234) %></td>
-      <td><%= user.scores_at_level_for_game(3, 1234) %></td>
-      <td><%= user.upline.try(:solution_number) %></td>
-    </tr>
-  <% end %>
-  </tbody>
-</table>
-
-<div id="user-tree">
-  <ul>
-    <% User.topline.each do |top_user| %>
-      <%= generate_downlines(top_user) %>
-    <% end %>
-  </ul>
+<div class="container">
+  <div class="col-xs-2">
+    <form id="filter-users-form">
+      <div class="form-field">
+        <%= select_tag :game, options_from_collection_for_select(Game.all, "id", "name"), class: 'form-control' %>
+      </div>
+      <div class="form-field">
+        <%= radio_button_tag :depth, :at, true %> At &nbsp;
+        <span style="float: right"><%= radio_button_tag :depth, :thru, false %> Thru</span>
+      </div>
+      <div class="form-field">
+        <%= select_tag :base_level, options_for_select(%w[ Personal 1st 2nd 3rd 4th 5th 6th ]), class: 'form-control' %>
+      </div>
+      The forms below are not yet active
+      <div class="form-field">
+        <%= select_tag :hierarchy_level, options_for_select(%w(Representative Sr.Representative District Division Regional Sr.Regional RVP SVP NSD SNSD)), class: 'form-control' %>
+      </div>
+      <div class="form-field">
+        <!-- Select Area, etc etc -->
+      </div>
+    </form>
+  </div>
+  <div class="col-xs-10">
+    <table class="table table-striped">
+      <thead>
+        <th>#</th>
+        <th>User</th>
+        <th>Value</th>
+        <th>Upline</th>
+      </thead>
+      <tbody id="filtered-user-table" data-userUrl="<%= filtered_users_path %>">
+      </tbody>
+    </table>
+    <div id="loading-container" class="text-center">
+      <i class="fa fa-spinner fa-3x fa-spin"></i>
+    </div>
+  </div>
 </div>

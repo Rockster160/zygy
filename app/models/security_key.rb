@@ -25,8 +25,4 @@ class SecurityKey < ActiveRecord::Base
     end
   end
 
-  def valid_authorization_code(auth_code)
-    authorization_code == auth_code
-  end
-
 end
