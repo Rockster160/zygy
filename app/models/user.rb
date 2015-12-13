@@ -79,7 +79,7 @@ class User < ActiveRecord::Base
   end
 
   def scores_thru_level_for_game(x, game_id)
-    self.score_for_game(game_id) + all_downlines_by(x).inject(0) { |sum, user| sum + user.score_for_game(game_id) }
+    all_downlines_by(x).inject(0) { |sum, user| sum + user.score_for_game(game_id) }
   end
 
   def address(string_format='%s1 %s2 %c, %S, %z %C')
