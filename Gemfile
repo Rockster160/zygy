@@ -9,7 +9,7 @@ gem 'jbuilder', '~> 2.0'
 gem 'sdoc', '~> 0.4.0',          group: :doc
 gem 'spring',        group: :development
 gem 'devise'
-gem 'unicorn'
+gem 'puma'
 gem 'sidekiq'
 gem 'sidekiq-cron'
 gem 'autoprefixer-rails'
@@ -17,6 +17,11 @@ gem 'faker'
 gem 'font-awesome-rails'
 
 group :development, :test do
+  gem 'capistrano',         require: false
+  gem 'capistrano-rvm',     require: false
+  gem 'capistrano-rails',   require: false
+  gem 'capistrano-bundler', require: false
+  gem 'capistrano3-puma',   require: false
   gem 'annotate'
   gem 'better_errors'
   gem 'binding_of_caller'
