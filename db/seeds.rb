@@ -8,32 +8,30 @@
 
 Game.create(name: 'Pirate Pike')
 
-if Rails.env.development?
-  def random_creds
-    {email: "#{::Faker::Name.first_name.downcase}#{::Faker::Name.last_name.downcase}@email.com", password: 'password'}
-  end
+def random_creds
+  {email: "#{::Faker::Name.first_name.downcase}#{::Faker::Name.last_name.downcase}@email.com", password: 'password'}
+end
 
-  def display_user_and_uplines(user)
-    all_uplines = user.uplines_by(100)
-    puts "#{all_uplines.map(&:id).join(' ')} : #{user.id}"
-  end
+def display_user_and_uplines(user)
+  all_uplines = user.uplines_by(100)
+  puts "#{all_uplines.map(&:id).join(' ')} : #{user.id}"
+end
 
-  10.times do
-    u = User.create(random_creds)
-    display_user_and_uplines(u)
-  end
-  1500.times do
-    u = User.all.sample.downlines.create(random_creds)
-    display_user_and_uplines(u)
-  end
+3.times do
+  u = User.create(random_creds)
+  display_user_and_uplines(u)
+end
+150.times do
+  u = User.all.sample.downlines.create(random_creds)
+  display_user_and_uplines(u)
+end
 
-  def scores_for_downlines(user)
-    return nil unless user
-    user.new_score_for_game('169181205-169115', rand(10000))
-    scores_for_downlines(user.downlines.sample) if user.downlines
-  end
+def scores_for_downlines(user)
+  return nil unless user
+  user.new_score_for_game('169181205-169115', rand(10000))
+  scores_for_downlines(user.downlines.sample) if user.downlines
+end
 
-  100.times do
-    scores_for_downlines(User.topline.sample)
-  end
+100.times do
+  scores_for_downlines(User.topline.sample)
 end
