@@ -5,8 +5,8 @@ default: &default
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: 5
   host: localhost
-  username: rocco
-  password: <%= ENV['APP_DATABASE_PASSWORD'] %>
+  username: rails
+  password: <%= ENV['ZYGY_PG_PASSWORD'] %>
 
 development:
   <<: *default
@@ -22,5 +22,5 @@ test:
 production:
   <<: *default
   database: zygy_production
-  username: rocco
-  password: <%= ENV['APP_DATABASE_PASSWORD'] %>
+  username: rails
+  password: <%= ENV['ZYGY_PG_PASSWORD'] %>
