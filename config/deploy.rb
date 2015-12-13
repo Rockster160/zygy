@@ -3,7 +3,7 @@ server '45.55.227.75', port: 9949, roles: [:web, :app, :db], primary: true
 
 set :repo_url,        'git@github.com:Rockster160/zygy.git'
 set :application,     'zygy'
-set :user,            'rails'
+set :user,            'rocco'
 set :puma_threads,    [4, 16]
 set :puma_workers,    0
 
