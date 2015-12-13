@@ -67,15 +67,15 @@ class User < ActiveRecord::Base
   end
 
   def score_for_game(game_id)
-    scores.find_by_game_id(game_id)
+    scores.find_by_game_id(game_id).try(:score) || 0
   end
 
   def scores_at_level_for_game(x, game_id)
-    downlines_by(x).inject(0) { |sum, user| sum + (user.score_for_game(game_id).try(:score) || 0) }
+    downlines_by(x).inject(0) { |sum, user| sum + user.score_for_game(game_id) }
   end
 
   def scores_thru_level_for_game(x, game_id)
-    all_downlines_by(x).inject(0) { |sum, user| sum + (user.score_for_game(game_id).try(:score) || 0) }
+    self.score_for_game(game_id) + all_downlines_by(x).inject(0) { |sum, user| sum + user.score_for_game(game_id) }
   end
 
   def address(string_format='%s1 %s2 %c, %S, %z %C')

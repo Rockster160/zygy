@@ -1,5 +1,5 @@
 <% def generate_downlines(user) %>
-  <li><%= user.solution_number %> <% if user.score_for_game(1234) %>- <span style="color: red;"><%= user.score_for_game(1234).score %></span><% end %>
+  <li><%= user.solution_number %>
     <% if user.downlines.any? %>
       <ul>
         <% user.downlines.each do |downline| %>

@@ -12,7 +12,7 @@ gem 'devise'
 gem 'unicorn'
 gem 'sidekiq'
 gem 'sidekiq-cron'
-# gem 'autoprefixer-rails'
+gem 'autoprefixer-rails'
 gem 'faker'
 gem 'font-awesome-rails'
 
