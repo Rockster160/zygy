@@ -28,7 +28,8 @@ end
 
 def scores_for_downlines(user)
   return nil unless user
-  user.new_score_for_game('169181205-169115', rand(10000))
+  game = Game.all.sample.identifier
+  user.new_score_for_game(game, rand(1000))
   scores_for_downlines(user.downlines.sample) if user.downlines
 end
 

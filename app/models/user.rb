@@ -57,7 +57,9 @@ class User < ActiveRecord::Base
   after_create :set_solution_number
 
   def new_score_for_game(game_identifier, score)
-    scores.where(game_id: Game.by_identifier(game_identifier).id).first_or_create.try_update_score(score)
+    game = Game.by_identifier(game_identifier)
+    return false unless game
+    scores.where(game_id: game.id).first_or_create.try_update_score(score)
     # FIXME - Should this always create a new score?
   end
 
