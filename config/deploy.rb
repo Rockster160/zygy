@@ -1,5 +1,5 @@
 # Change these
-server '45.55.227.75', port: 9949, roles: [:web, :app, :db], primary: true
+server '45.55.212.69', port: 9949, roles: [:web, :app, :db], primary: true
 
 set :repo_url,        'git@github.com:Rockster160/zygy.git'
 set :application,     'zygy'
