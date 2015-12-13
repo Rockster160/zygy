@@ -64,7 +64,9 @@ class User < ActiveRecord::Base
   end
 
   def generate_authorization_code_for_game(game_identifier)
-    key = security_keys.where(game_id: Game.by_identifier(game_identifier).id).first_or_create
+    game = Game.by_identifier(game_identifier)
+    return false unless game
+    key = security_keys.where(game_id: game.id).first_or_create
     key.generate_new_key
   end
 
