@@ -23,6 +23,7 @@
 #
 
 # avatar
+# access_level => enum (standard mod admin)
 # life_cash_accumulated   \_- Do we need these? How else should it be tracked?
 # non_paid_out_cash       /
 # hierarchy_level => enum (Representative Sr.Representative District Division Regional Sr.Regional RVP SVP NSD SNSD)
@@ -79,7 +80,8 @@ class User < ActiveRecord::Base
   end
 
   def scores_thru_level_for_game(x, game_id)
-    all_downlines_by(x).inject(0) { |sum, user| sum + user.score_for_game(game_id) }
+    return self.score_for_game(game_id) if x == 0
+    self.score_for_game(game_id) + all_downlines_by(x).inject(0) { |sum, user| sum + user.score_for_game(game_id) }
   end
 
   def address(string_format='%s1 %s2 %c, %S, %z %C')
