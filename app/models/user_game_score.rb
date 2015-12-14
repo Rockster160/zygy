@@ -21,9 +21,5 @@ class UserGameScore < ActiveRecord::Base
     self.score ||= 0
     self.save
   end
-
-  def try_update_score(new_score)
-    return false unless new_score > score
-    update(score: new_score)
-  end
+  
 end

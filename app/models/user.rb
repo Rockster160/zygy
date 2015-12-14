@@ -36,6 +36,8 @@
 # Non-registered user purchases goes straight to Zygy
 # Cannot Change uplines ***
 
+# Part of #.qualified? method- verify they have added a SSN
+
 # class Purchase
 # purchased_by, date/time, amount_of_purchase
 
@@ -50,6 +52,7 @@ class User < ActiveRecord::Base
   has_many :downlines, class_name: 'User', foreign_key: 'upline_id'
   has_many :user_game_scores
   has_many :security_keys
+  has_many :purchases
 
   def scores; user_game_scores; end
 
@@ -57,11 +60,14 @@ class User < ActiveRecord::Base
 
   after_create :set_solution_number
 
+  def high_score_for_game(game_id)
+    scores.where(game_id: game_id).order(score: :desc).first.score
+  end
+
   def new_score_for_game(game_identifier, score)
     game = Game.by_identifier(game_identifier)
     return false unless game
-    scores.where(game_id: game.id).first_or_create.try_update_score(score)
-    # FIXME - Should this always create a new score?
+    scores.where(game_id: game.id).create(score: score)
   end
 
   def generate_authorization_code_for_game(game_identifier)
