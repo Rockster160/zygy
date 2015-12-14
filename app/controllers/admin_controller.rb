@@ -12,6 +12,7 @@ class AdminController < ApplicationController
       if score > 0
         {
           solution_number: user.solution_number,
+          personal_score: user.score_for_game(game.id),
           score: score,
           uplines_solution: user.upline.try(:solution_number)
         }

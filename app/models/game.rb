@@ -20,6 +20,10 @@ class Game < ActiveRecord::Base
   after_create :create_identifier
   validates :game_identifier, uniqueness: true
 
+  def self.show_all
+    Game.all.map {|game| "#{game.name} : #{game.game_identifier}"}
+  end
+
   def create_identifier
     return unless game_identifier.nil?
     return if name.nil?

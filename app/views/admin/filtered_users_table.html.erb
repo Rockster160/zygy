@@ -2,6 +2,7 @@
   <tr>
     <td><%= place + 1 %></td>
     <td class="highlight-solution"><%= user_hash[:solution_number] %></td>
+    <td style="text-align: right;"><%= number_with_delimiter(user_hash[:personal_score]) %></td>
     <td style="text-align: right;"><%= number_with_delimiter(user_hash[:score]) %></td>
     <td class="highlight-solution"><%= user_hash[:uplines_solution] %></td>
   </tr>
