@@ -14,14 +14,14 @@ $(document).ready(function() {
 
   $('tbody')
     .on('mouseover', '.highlight-solution', function() {
-      if ($(this).html().length > 0) {
-        $('.highlight-solution:contains("' + $(this).html() + '")').css('background', 'orange');
+      if ($(this).html().trim().length > 0) {
+        $('.highlight-solution:contains("' + $(this).children().html() + '")').css('background', 'orange');
         $(this).css('background', 'red');
       }
     })
     .on('mouseleave', '.highlight-solution', function() {
-      if ($(this).html().length > 0) {
-        $('.highlight-solution:contains("' + $(this).html() + '")').css('background', 'inherit');
+      if ($(this).html().trim().length > 0) {
+        $('.highlight-solution:contains("' + $(this).children().html() + '")').css('background', 'inherit');
         $(this).css('background', 'inherit');
       }
     })

@@ -29,14 +29,14 @@
 # hierarchy_level => enum (Representative Sr.Representative District Division Regional Sr.Regional RVP SVP NSD SNSD)
 # Baseshop: All non-RVPs below you not under another RVP
 
-# Track only high scores or accumulated scores?
-
 # Payout - Evenly among 8 upper Qualified reps
 # If not enough qualified, remainder goes straight to Zygy
 # Non-registered user purchases goes straight to Zygy
 # Cannot Change uplines ***
 
 # Part of #.qualified? method- verify they have added a SSN
+
+# Track first game they registered with?
 
 # class Purchase
 # purchased_by, date/time, amount_of_purchase
@@ -61,7 +61,7 @@ class User < ActiveRecord::Base
   after_create :set_solution_number
 
   def high_score_for_game(game_id)
-    scores.where(game_id: game_id).order(score: :desc).first.score
+    scores.where(game_id: game_id).order(score: :desc).first.try(:score)
   end
 
   def new_score_for_game(game_identifier, score)

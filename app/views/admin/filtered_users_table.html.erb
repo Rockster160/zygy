@@ -1,9 +1,13 @@
 <% @filtered_users.each_with_index do |user_hash, place| %>
   <tr>
     <td><%= place + 1 %></td>
-    <td class="highlight-solution"><%= user_hash[:solution_number] %></td>
+    <td class="highlight-solution"><a href="<%= user_hash[:user_route] %>"><%= user_hash[:solution_number] %></a></td>
     <td style="text-align: right;"><%= number_with_delimiter(user_hash[:personal_score]) %></td>
     <td style="text-align: right;"><%= number_with_delimiter(user_hash[:score]) %></td>
-    <td class="highlight-solution"><%= user_hash[:uplines_solution] %></td>
+    <td class="highlight-solution">
+      <% unless user_hash[:upline_route].nil? %>
+        <a href="<%= user_hash[:upline_route] %>"><%= user_hash[:uplines_solution] %></a>
+      <% end %>
+    </td>
   </tr>
 <% end %>

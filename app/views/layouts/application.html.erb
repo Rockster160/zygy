@@ -9,6 +9,9 @@
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jstree/3.0.9/themes/default/style.min.css" />
   <script src="//cdnjs.cloudflare.com/ajax/libs/jstree/3.0.9/jstree.min.js"></script>
+  <% if content_for? :head %>
+    <%= yield :head %>
+  <% end %>
   <%= csrf_meta_tags %>
 </head>
 <body>
