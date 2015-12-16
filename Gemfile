@@ -15,6 +15,7 @@ gem 'sidekiq-cron'
 gem 'autoprefixer-rails'
 gem 'faker'
 gem 'font-awesome-rails'
+gem 'colorize'
 
 group :development, :test do
   gem 'capistrano',         require: false

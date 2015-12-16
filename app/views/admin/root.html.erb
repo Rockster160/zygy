@@ -1,5 +1,8 @@
 <div class="container">
   <div class="col-xs-2">
+    <div class="text-center" style="margin-bottom: 20px;">
+      <%= link_to 'Refresh', '', class: 'js-refresh-btn btn btn-info' %>
+    </div>
     <form id="filter-users-form">
       <div class="form-field">
         <%= select_tag :game, options_from_collection_for_select(Game.all, "id", "name"), class: 'form-control' %>

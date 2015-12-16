@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151214061008) do
+ActiveRecord::Schema.define(version: 20151215201224) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -28,6 +28,7 @@ ActiveRecord::Schema.define(version: 20151214061008) do
     t.string   "amount"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "game_id"
   end
 
   add_index "purchases", ["user_id"], name: "index_purchases_on_user_id", using: :btree
@@ -49,9 +50,37 @@ ActiveRecord::Schema.define(version: 20151214061008) do
     t.integer  "score"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "username"
   end
 
   add_index "user_game_scores", ["user_id"], name: "index_user_game_scores_on_user_id", using: :btree
+
+  create_table "user_score_trackers", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "game_id"
+    t.integer  "at_1",          default: 0
+    t.integer  "at_2",          default: 0
+    t.integer  "at_3",          default: 0
+    t.integer  "at_4",          default: 0
+    t.integer  "at_5",          default: 0
+    t.integer  "at_6",          default: 0
+    t.integer  "at_7",          default: 0
+    t.integer  "at_8",          default: 0
+    t.integer  "at_9",          default: 0
+    t.integer  "at_10",         default: 0
+    t.integer  "at_11",         default: 0
+    t.integer  "at_12",         default: 0
+    t.integer  "at_13",         default: 0
+    t.integer  "at_14",         default: 0
+    t.integer  "at_15",         default: 0
+    t.integer  "all_time_high", default: 0
+    t.integer  "cumulative",    default: 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_score_trackers", ["game_id"], name: "index_user_score_trackers_on_game_id", using: :btree
+  add_index "user_score_trackers", ["user_id"], name: "index_user_score_trackers_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false

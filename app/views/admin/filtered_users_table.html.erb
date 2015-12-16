@@ -1,12 +1,14 @@
-<% @filtered_users.each_with_index do |user_hash, place| %>
+<% @filtered_trackers.each_with_index do |tracker, place| %>
+  <% user = tracker.user %>
+  <% score = params[:depth] == "at" ? tracker.at(@base_level) : tracker.thru(@base_level) %>
   <tr>
     <td><%= place + 1 %></td>
-    <td class="highlight-solution"><a href="<%= user_hash[:user_route] %>"><%= user_hash[:solution_number] %></a></td>
-    <td style="text-align: right;"><%= number_with_delimiter(user_hash[:personal_score]) %></td>
-    <td style="text-align: right;"><%= number_with_delimiter(user_hash[:score]) %></td>
+    <td class="highlight-solution"><a href="<%= user_path(user) %>"><%= "#{user.username_for_game(@game)} - #{user.solution_number}" %></a></td>
+    <td style="text-align: right;"><%= number_with_delimiter(tracker.all_time_high) %></td>
+    <td style="text-align: right;"><%= number_with_delimiter(score) %></td>
     <td class="highlight-solution">
-      <% unless user_hash[:upline_route].nil? %>
-        <a href="<%= user_hash[:upline_route] %>"><%= user_hash[:uplines_solution] %></a>
+      <% if user.upline %>
+        <a href="<%= user_path(user.upline) %>"><%= "#{user.upline.username_for_game(@game)} - #{user.upline.solution_number}" %></a>
       <% end %>
     </td>
   </tr>
