@@ -56,7 +56,7 @@ class UserScoreTracker < ActiveRecord::Base
     high = user.high_score_for_game_id(game.id)
     puts "recalculate_high"
     unless scores_match?(high, all_time_high)
-      update(all_time_high: high)
+      # update(all_time_high: high)
     end
   end
 
@@ -66,7 +66,7 @@ class UserScoreTracker < ActiveRecord::Base
     new_cumulative = (my_scores + downline_scores).flatten.map(&:score).inject(0) { |sum, score| sum + score }
     puts "recalculate_cumulative"
     unless scores_match?(cumulative, new_cumulative)
-      update(cumulative: new_cumulative)
+      # update(cumulative: new_cumulative)
     end
   end
 
@@ -75,7 +75,7 @@ class UserScoreTracker < ActiveRecord::Base
     highest_score = high_scores.sort.last || 0
     puts "recalculate_at - #{x}"
     unless scores_match?(at(x), highest_score)
-      update("at_#{x}".to_sym => highest_score)
+      # update("at_#{x}".to_sym => highest_score)
     end
   end
 # These may not work as expected...
