@@ -22,6 +22,10 @@ class AdminController < ApplicationController
     end
   end
 
+  def user
+    @game = Game.find(params[:game_id])
+  end
+
   def users_json
     @game = Game.find(params[:game_id])
     @user = User.find(params[:user_id])
