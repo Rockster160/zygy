@@ -78,7 +78,7 @@ refreshAnimTree = function(users_json) {
   var center_x = PAPER_WIDTH/2
   var center_y = PAPER_HEIGHT/2
 
-  var paper = Raphael(horz_offset, vert_offset, PAPER_WIDTH, PAPER_HEIGHT);
+  var paper = Raphael(horz_offset, vert_offset + 50, PAPER_WIDTH, PAPER_HEIGHT);
   var background = paper.rect(0, 0, PAPER_WIDTH, PAPER_HEIGHT);
   background.attr("fill", "#aaa")
 
