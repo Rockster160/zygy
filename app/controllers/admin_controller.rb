@@ -51,7 +51,7 @@ class AdminController < ApplicationController
 
   def recursive_downlines(user, layers)
     return {} if user.nil? || layers == 0
-    downlines = user.downlines.first(3)
+    downlines = user.downlines.sort { |u| u.high_score_for_game_id(@game.id) }.last(3)
     {
       downlines: downlines.map do |downline|
         get_user_hash(downline).merge(recursive_downlines(downline, layers-1))
