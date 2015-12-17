@@ -11,17 +11,22 @@
 
 class Game < ActiveRecord::Base
 
+  has_many :purchases
   has_many :user_game_scores
+  has_many :user_score_trackers
 
-  def self.by_identifier(identifier)
-    find_by_game_identifier(identifier)
+  def code; game_identifier; end
+
+  def self.by_code(code)
+    return nil unless code
+    self.find_by_game_identifier(code.to_s)
   end
 
   after_create :create_identifier
   validates :game_identifier, uniqueness: true
 
   def self.show_all
-    Game.all.map {|game| "#{game.name} : #{game.game_identifier}"}
+    puts Game.all.map {|game| "#{game.name} : #{game.game_identifier}"}
   end
 
   def create_identifier

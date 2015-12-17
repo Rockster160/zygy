@@ -17,7 +17,7 @@ class ApiController < ApplicationController
 
     if user.present? && game_code.present?
       response.headers["Authorization-Success"] = 'true'
-      response.headers["Authorization-Code"] = user.generate_authorization_code_for_game(game_code)
+      response.headers["Authorization-Code"] = user.generate_authorization_for_game_code(game_code)
     else
       response.headers["Authorization-Success"] = 'false'
     end
@@ -49,7 +49,7 @@ class ApiController < ApplicationController
     if server_error.length == 0
       response.headers['Authorization-Success'] = 'true'
       response.headers['Solution-Number'] = user.solution_number
-      response.headers["Authorization-Code"] = user.generate_authorization_code_for_game(request.headers['Game-Identifier'])
+      response.headers["Authorization-Code"] = user.generate_authorization_for_game_code(request.headers['Game-Identifier'])
     else
       response.headers['Authorization-Success'] = 'false'
       response.headers['Error-Message'] = server_error
@@ -67,8 +67,8 @@ class ApiController < ApplicationController
 
     if user.present?
       response.headers['Authorization-Success'] = 'true'
-      response.headers["Authorization-Code"] = user.generate_authorization_code_for_game(game_code)
-      user.new_score_for_game(game_code, params[:score].to_i)
+      response.headers["Authorization-Code"] = user.generate_authorization_for_game_code(game_code)
+      user.new_score_for_game_code(params[:username], game_code, params[:score].to_i)
     else
       response.headers['Authorization-Success'] = 'false'
     end
@@ -81,7 +81,7 @@ class ApiController < ApplicationController
   private
 
   def user_from_game_authorization(game_identifier, authorization)
-    key = SecurityKey.where(game_id: Game.by_identifier(game_identifier).id, authorization_code: authorization).first
+    key = SecurityKey.where(game_id: Game.by_code(game_identifier).id, authorization_code: authorization).first
     return nil unless key
     key.user
   end

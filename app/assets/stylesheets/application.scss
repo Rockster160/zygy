@@ -15,6 +15,21 @@
  *= require_self
  */
 
+circle[data-userid] { cursor: pointer; }
+#info-box {
+  position: fixed;
+  z-index: 1000;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 10px 15px;
+  border: 3px solid black;
+  border-radius: 5px;
+  display: inline-block;
+  #name-row { font-weight: bold; }
+  #username-row {}
+  #personal-row {}
+  #directs_count-row {}
+}
+
 .highlight-solution {
   a {
     color: inherit;

@@ -60,6 +60,7 @@ GEM
       capistrano (~> 3.0)
       puma (>= 2.6)
     coderay (1.1.0)
+    colorize (0.7.7)
     concurrent-ruby (1.0.0)
     connection_pool (2.2.0)
     debug_inspector (0.0.2)
@@ -205,6 +206,7 @@ DEPENDENCIES
   capistrano-rails
   capistrano-rvm
   capistrano3-puma
+  colorize
   devise
   faker
   font-awesome-rails
