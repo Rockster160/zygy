@@ -25,10 +25,10 @@ end
   u = User.create(random_creds(rand(1000)))
   display_user_and_uplines(u)
 end
-# 1000.times do
-#   u = User.all.sample.downlines.create(random_creds(User.last.id))
-#   display_user_and_uplines(u)
-# end
+1000.times do
+  u = User.all.sample.downlines.create(random_creds(User.last.id))
+  display_user_and_uplines(u)
+end
 
 def generate_scores_for_downlines(user)
   return nil unless user
@@ -39,9 +39,9 @@ def generate_scores_for_downlines(user)
   generate_scores_for_downlines(user.downlines.sample) if user.downlines
 end
 
-# 3000.times do
-#   generate_scores_for_downlines(User.all.sample)
-# end
+1000.times do
+  generate_scores_for_downlines(User.all.sample)
+end
 
 def random_score_for_game_id(game_id, bell_curve=5, max_score=100)
   game = Game.find(game_id)
@@ -83,3 +83,5 @@ def check_all_trackers
   puts count[:false].to_s.colorize(:red)
   all_passed
 end
+
+check_all_trackers
