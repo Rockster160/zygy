@@ -47,45 +47,45 @@ class UserScoreTracker < ActiveRecord::Base
       puts "#{a} == #{b}".colorize(:green)
       return true
     else
-      puts "IS NOT THE SAME!!!! - #{a} != #{b}".colorize(:red)
+      puts "IS NOT THE SAME!!!! : #{a} != #{b}".colorize(:red)
       return false
     end
   end
 
   def recalculate_high
     high = user.high_score_for_game_id(game.id)
-    puts "recalculate_high"
-    unless scores_match?(high, all_time_high)
-      # update(all_time_high: high)
+    unless did_match = scores_match?(high, all_time_high)
+      update(all_time_high: high)
     end
+    did_match
   end
 
   def recalculate_cumulative
-    my_scores = user.scores_for_game_id(game.id)
-    downline_scores = user.all_downlines.map { |downline| downline.scores_for_game_id(game.id) }
-    new_cumulative = (my_scores + downline_scores).flatten.map(&:score).inject(0) { |sum, score| sum + score }
-    puts "recalculate_cumulative"
-    unless scores_match?(cumulative, new_cumulative)
-      # update(cumulative: new_cumulative)
+    new_cumulative = user.scores_for_game_id(game.id).map(&:score).inject(0) { |sum, score| sum + score }
+    unless did_match = scores_match?(cumulative, new_cumulative)
+      update(cumulative: new_cumulative)
     end
+    did_match
   end
 
   def recalculate_at(x)
     high_scores = user.downlines_by(x).map { |dl| dl.high_score_for_game_id(game.id) }
-    highest_score = high_scores.sort.last || 0
-    puts "recalculate_at - #{x}"
-    unless scores_match?(at(x), highest_score)
-      # update("at_#{x}".to_sym => highest_score)
+    highest_score = high_scores.inject(0) { |sum, score| sum + score }
+    unless did_match = scores_match?(at(x), highest_score)
+      update("at_#{x}".to_sym => highest_score)
     end
+    did_match
   end
-# These may not work as expected...
+
   def refresh
-    recalculate_high
-    recalculate_cumulative
+    all_passed = true
+    all_passed = false unless recalculate_high
+    all_passed = false unless recalculate_cumulative
 
     15.times do |t|
-      recalculate_at(t + 1)
+      all_passed = false unless recalculate_at(t + 1)
     end
+    all_passed
   end
 
 end
