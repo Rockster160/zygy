@@ -2,33 +2,33 @@
 #
 # Table name: purchase_trackers
 #
-#  id         :integer          not null, primary key
-#  user_id    :integer
-#  game_id    :integer
-#  at_1       :integer          default(0)
-#  at_2       :integer          default(0)
-#  at_3       :integer          default(0)
-#  at_4       :integer          default(0)
-#  at_5       :integer          default(0)
-#  at_6       :integer          default(0)
-#  at_7       :integer          default(0)
-#  at_8       :integer          default(0)
-#  at_9       :integer          default(0)
-#  at_10      :integer          default(0)
-#  at_11      :integer          default(0)
-#  at_12      :integer          default(0)
-#  at_13      :integer          default(0)
-#  at_14      :integer          default(0)
-#  at_15      :integer          default(0)
-#  cumulative :integer          default(0)
-#  created_at :datetime
-#  updated_at :datetime
+#  id           :integer          not null, primary key
+#  at_1         :integer          default(0)
+#  at_2         :integer          default(0)
+#  at_3         :integer          default(0)
+#  at_4         :integer          default(0)
+#  at_5         :integer          default(0)
+#  at_6         :integer          default(0)
+#  at_7         :integer          default(0)
+#  at_8         :integer          default(0)
+#  at_9         :integer          default(0)
+#  at_10        :integer          default(0)
+#  at_11        :integer          default(0)
+#  at_12        :integer          default(0)
+#  at_13        :integer          default(0)
+#  at_14        :integer          default(0)
+#  at_15        :integer          default(0)
+#  cumulative   :integer          default(0)
+#  created_at   :datetime
+#  updated_at   :datetime
+#  user_game_id :integer
+#  game_id      :integer
+#  user_id      :integer
 #
 
 class PurchaseTracker < ActiveRecord::Base
 
-  belongs_to :user
-  belongs_to :game
+  belongs_to :user_game
 
   def at_0; cumulative; end
   def at(x)
@@ -52,7 +52,7 @@ class PurchaseTracker < ActiveRecord::Base
   end
 
   def recalculate_cumulative
-    new_cumulative = user.purchases_for_game_id(game.id).map(&:amount).inject(0) { |sum, amount| sum + amount }
+    new_cumulative = user_game.purchases.map(&:amount).inject(0) { |sum, amount| sum + amount }
     unless did_match = scores_match?(cumulative, new_cumulative)
       update(cumulative: new_cumulative)
     end
@@ -60,7 +60,7 @@ class PurchaseTracker < ActiveRecord::Base
   end
 
   def recalculate_at(x)
-    purchases = user.downlines_by(x).map { |dl| dl.purchase_total_for_game_id(game.id) }
+    purchases = user_game.user.downlines_by(x).map { |dl| dl.game(user_game.game.id).purchases_total }
     cumulative_at_x = purchases.inject(0) { |sum, total_value| sum + total_value }
     unless did_match = scores_match?(at(x), cumulative_at_x)
       update("at_#{x}".to_sym => cumulative_at_x)

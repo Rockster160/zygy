@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151219164301) do
+ActiveRecord::Schema.define(version: 20151219193449) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,67 +24,64 @@ ActiveRecord::Schema.define(version: 20151219164301) do
   end
 
   create_table "purchase_trackers", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "game_id"
-    t.integer  "at_1",       default: 0
-    t.integer  "at_2",       default: 0
-    t.integer  "at_3",       default: 0
-    t.integer  "at_4",       default: 0
-    t.integer  "at_5",       default: 0
-    t.integer  "at_6",       default: 0
-    t.integer  "at_7",       default: 0
-    t.integer  "at_8",       default: 0
-    t.integer  "at_9",       default: 0
-    t.integer  "at_10",      default: 0
-    t.integer  "at_11",      default: 0
-    t.integer  "at_12",      default: 0
-    t.integer  "at_13",      default: 0
-    t.integer  "at_14",      default: 0
-    t.integer  "at_15",      default: 0
-    t.integer  "cumulative", default: 0
+    t.integer  "at_1",         default: 0
+    t.integer  "at_2",         default: 0
+    t.integer  "at_3",         default: 0
+    t.integer  "at_4",         default: 0
+    t.integer  "at_5",         default: 0
+    t.integer  "at_6",         default: 0
+    t.integer  "at_7",         default: 0
+    t.integer  "at_8",         default: 0
+    t.integer  "at_9",         default: 0
+    t.integer  "at_10",        default: 0
+    t.integer  "at_11",        default: 0
+    t.integer  "at_12",        default: 0
+    t.integer  "at_13",        default: 0
+    t.integer  "at_14",        default: 0
+    t.integer  "at_15",        default: 0
+    t.integer  "cumulative",   default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_game_id"
+    t.integer  "game_id"
+    t.integer  "user_id"
   end
-
-  add_index "purchase_trackers", ["game_id"], name: "index_purchase_trackers_on_game_id", using: :btree
-  add_index "purchase_trackers", ["user_id"], name: "index_purchase_trackers_on_user_id", using: :btree
 
   create_table "purchases", force: true do |t|
-    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "game_id"
-    t.integer  "amount",     default: 0
+    t.integer  "amount",       default: 0
+    t.integer  "user_game_id"
   end
 
-  add_index "purchases", ["user_id"], name: "index_purchases_on_user_id", using: :btree
-
   create_table "security_keys", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "game_id"
     t.string   "authorization_code"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_game_id"
   end
 
-  add_index "security_keys", ["game_id"], name: "index_security_keys_on_game_id", using: :btree
-  add_index "security_keys", ["user_id"], name: "index_security_keys_on_user_id", using: :btree
-
   create_table "user_game_scores", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "game_id"
     t.integer  "score"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "username"
     t.integer  "level"
+    t.integer  "user_game_id"
   end
 
-  add_index "user_game_scores", ["user_id"], name: "index_user_game_scores_on_user_id", using: :btree
-
-  create_table "user_score_trackers", force: true do |t|
+  create_table "user_games", force: true do |t|
     t.integer  "user_id"
     t.integer  "game_id"
+    t.string   "username"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_games", ["game_id"], name: "index_user_games_on_game_id", using: :btree
+  add_index "user_games", ["user_id"], name: "index_user_games_on_user_id", using: :btree
+
+  create_table "user_score_trackers", force: true do |t|
     t.integer  "at_1",          default: 0
     t.integer  "at_2",          default: 0
     t.integer  "at_3",          default: 0
@@ -104,10 +101,10 @@ ActiveRecord::Schema.define(version: 20151219164301) do
     t.integer  "cumulative",    default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "user_game_id"
+    t.integer  "game_id"
+    t.integer  "user_id"
   end
-
-  add_index "user_score_trackers", ["game_id"], name: "index_user_score_trackers_on_game_id", using: :btree
-  add_index "user_score_trackers", ["user_id"], name: "index_user_score_trackers_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false

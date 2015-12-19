@@ -3,17 +3,15 @@
 # Table name: security_keys
 #
 #  id                 :integer          not null, primary key
-#  user_id            :integer
-#  game_id            :integer
 #  authorization_code :string(255)
 #  created_at         :datetime
 #  updated_at         :datetime
+#  user_game_id       :integer
 #
 
 class SecurityKey < ActiveRecord::Base
 
-  belongs_to :user
-  belongs_to :game
+  belongs_to :user_game
 
   def generate_new_key
     rng_str = ::SecureRandom.base64(20)

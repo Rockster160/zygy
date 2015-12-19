@@ -17,7 +17,7 @@ def random_creds(id)
 end
 
 def display_user_and_uplines(user)
-  all_uplines = user.uplines_by(100)
+  all_uplines = user.all_uplines.sort_by(&:id)
   puts "#{all_uplines.map(&:id).join(' ')} : #{user.id}"
 end
 
@@ -25,7 +25,7 @@ end
   u = User.create(random_creds(rand(1000)))
   display_user_and_uplines(u)
 end
-1000.times do
+100.times do
   u = User.all.sample.downlines.create(random_creds(User.last.id))
   display_user_and_uplines(u)
 end
@@ -36,21 +36,23 @@ def random_score_for_game_id(user, bell_curve=5, max_score=100)
   bell_curve.times { total += rand(max_score) }
   score = (total/bell_curve).round
   puts "#{user.first_name}#{user.id} : #{score}"
-  user.new_score_for_game_code("#{user.first_name}#{user.id}", game.code, score)
+  user_game = user.game(game.id)
+  user_game.scores.create(score: score)
 end
 
 def random_purchase_for_user(user)
   return nil unless user
   game = Game.first
+  user_game = user.game(game.id)
   purchase_amount = ([0.99, 1.99, 3.99, 5.99].sample * 100).round
-  puts "#{user.username_for_game(game)} : #{purchase_amount}"
-  user.new_purchase_for_game_code(game.code, purchase_amount)
+  puts "#{user_game.username} : #{purchase_amount}"
+  user_game.purchases.create(amount: purchase_amount)
 end
 
-1000.times do
+100.times do
   random_score_for_game_id(User.all.sample)
 end
-500.times do
+50.times do
   random_purchase_for_user(User.all.sample)
 end
 

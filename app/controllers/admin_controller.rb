@@ -43,10 +43,11 @@ class AdminController < ApplicationController
 
   def get_user_hash(user)
     return {} unless user
-    score = user.high_score_for_game_id(@game.id)
+    user_game = user.game(@game.id)
+    score = user_game.high_score
     {
       name: "#{user.first_name} #{user.last_name} - #{user.solution_number}",
-      username: "#{user.username_for_game(@game).presence || 'No Username'}",
+      username: "#{user.username_for_game_id(@game.id).presence || 'No Username'}",
       personal: score == 0 ? "Never Played" : score,
       user_id: user.id,
       directs_count: user.downlines.count
@@ -55,7 +56,7 @@ class AdminController < ApplicationController
 
   def recursive_downlines(user, layers)
     return {} if user.nil? || layers == 0
-    downlines = user.downlines.sort { |u| u.high_score_for_game_id(@game.id) }.last(3)
+    downlines = user.downlines.sort { |u| u.game(@game.id).high_score }.last(3)
     {
       downlines: downlines.map do |downline|
         get_user_hash(downline).merge(recursive_downlines(downline, layers-1))
