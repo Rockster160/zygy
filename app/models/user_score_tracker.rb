@@ -3,8 +3,6 @@
 # Table name: user_score_trackers
 #
 #  id            :integer          not null, primary key
-#  user_id       :integer
-#  game_id       :integer
 #  at_1          :integer          default(0)
 #  at_2          :integer          default(0)
 #  at_3          :integer          default(0)
@@ -24,12 +22,22 @@
 #  cumulative    :integer          default(0)
 #  created_at    :datetime
 #  updated_at    :datetime
+#  user_game_id  :integer
+#  game_id       :integer
+#  user_id       :integer
 #
 
 class UserScoreTracker < ActiveRecord::Base
 
-  belongs_to :user
-  belongs_to :game
+  belongs_to :user_game
+
+  after_create :add_game_and_user_id
+
+  def add_game_and_user_id
+    self.game_id = user_game.game.id
+    self.user_id = user_game.user.id
+    self.save
+  end
 
   def at_0; all_time_high; end
   def at(x)
@@ -53,7 +61,7 @@ class UserScoreTracker < ActiveRecord::Base
   end
 
   def recalculate_high
-    high = user.high_score_for_game_id(game.id)
+    high = user_game.high_score
     unless did_match = scores_match?(high, all_time_high)
       update(all_time_high: high)
     end
@@ -61,7 +69,7 @@ class UserScoreTracker < ActiveRecord::Base
   end
 
   def recalculate_cumulative
-    new_cumulative = user.scores_for_game_id(game.id).map(&:score).inject(0) { |sum, score| sum + score }
+    new_cumulative = user_game.scores.map(&:score).inject(0) { |sum, score| sum + score }
     unless did_match = scores_match?(cumulative, new_cumulative)
       update(cumulative: new_cumulative)
     end
@@ -69,7 +77,7 @@ class UserScoreTracker < ActiveRecord::Base
   end
 
   def recalculate_at(x)
-    high_scores = user.downlines_by(x).map { |dl| dl.high_score_for_game_id(game.id) }
+    high_scores = user_game.user.downlines_by(x).map { |dl| dl.game(user_game.game.id).high_score }
     highest_score = high_scores.inject(0) { |sum, score| sum + score }
     unless did_match = scores_match?(at(x), highest_score)
       update("at_#{x}".to_sym => highest_score)

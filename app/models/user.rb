@@ -50,48 +50,16 @@ class User < ActiveRecord::Base
 
   belongs_to :upline, class_name: 'User'
   has_many :downlines, class_name: 'User', foreign_key: 'upline_id'
-  has_many :user_game_scores
-  has_many :user_score_trackers
-  has_many :security_keys
-  has_many :purchases
-
-  def scores; user_game_scores; end
-
-  scope :by_scores_for_game, lambda { |game_id| joins(:user_game_scores).where(user_game_scores: { game_id: 1234 }).order("user_game_scores.score desc") }
+  has_many :user_games
 
   after_create :set_solution_number
 
-  def username_for_game(game)
-    scores.where(game_id: game.id).where.not(username: nil).first.try(:username)
+  def game(game_id)
+    user_games.where(game_id: game_id).first_or_create
   end
 
-  def high_score_for_game_id(game_id)
-    scores.where(game_id: game_id).order(score: :desc).first.try(:score) || 0
-  end
-  def scores_for_game_id(game_id)
-    scores.where(game_id: game_id).order(created_at: :desc)
-  end
-
-  def new_score_for_game_code(username, game_code, score)
-    game = Game.by_code(game_code)
-    return false unless game
-    scores.where(game_id: game.id).create(score: score, username: username)
-  end
-
-  def generate_authorization_for_game_code(game_code)
-    game = Game.by_code(game_code)
-    return false unless game
-    key = security_keys.where(game_id: game.id).first_or_create
-    key.generate_new_key
-  end
-
-  def scores_at_level_for_game_id(x, game_id)
-    downlines_by(x).inject(0) { |sum, user| sum + user.high_score_for_game_id(game_id) }
-  end
-
-  def scores_thru_level_for_game_id(x, game_id)
-    return self.high_score_for_game_id(game_id) if x == 0
-    self.high_score_for_game_id(game_id) + all_downlines_by(x).inject(0) { |sum, user| sum + user.high_score_for_game_id(game_id) }
+  def username_for_game_id(game_id)
+    game(game_id).username
   end
 
   def address(string_format='%s1 %s2 %c, %S, %z %C')
@@ -154,7 +122,6 @@ class User < ActiveRecord::Base
     end
     total
   end
-
   def count_levels_down
     all_downlines.group_by(&:count_levels_up).keys.sort.last
   end
