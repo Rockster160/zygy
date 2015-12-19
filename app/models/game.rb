@@ -14,6 +14,7 @@ class Game < ActiveRecord::Base
   has_many :purchases
   has_many :user_game_scores
   has_many :user_score_trackers
+  has_many :purchase_trackers
 
   def code; game_identifier; end
 

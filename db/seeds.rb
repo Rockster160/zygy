@@ -30,31 +30,32 @@ end
   display_user_and_uplines(u)
 end
 
-def generate_scores_for_downlines(user)
-  return nil unless user
+def random_score_for_game_id(user, bell_curve=5, max_score=100)
   game = Game.first
-  score = rand(1000)
-  user.new_score_for_game_code("#{user.first_name.downcase}#{user.id}", game.code, score)
-  puts "#{user.username_for_game(game)} : #{score}"
-  generate_scores_for_downlines(user.downlines.sample) if user.downlines
-end
-
-1000.times do
-  generate_scores_for_downlines(User.all.sample)
-end
-
-def random_score_for_game_id(game_id, bell_curve=5, max_score=100)
-  game = Game.find(game_id)
   total = 0
   bell_curve.times { total += rand(max_score) }
   score = (total/bell_curve).round
-  user = User.all.sample
   puts "#{user.first_name}#{user.id} : #{score}"
   user.new_score_for_game_code("#{user.first_name}#{user.id}", game.code, score)
 end
 
+def random_purchase_for_user(user)
+  return nil unless user
+  game = Game.first
+  purchase_amount = ([0.99, 1.99, 3.99, 5.99].sample * 100).round
+  puts "#{user.username_for_game(game)} : #{purchase_amount}"
+  user.new_purchase_for_game_code(game.code, purchase_amount)
+end
+
+1000.times do
+  random_score_for_game_id(User.all.sample)
+end
+500.times do
+  random_purchase_for_user(User.all.sample)
+end
+
 def random_user
-  inc_id = User.last.id + 1
+  inc_id = User.last ? User.last.id + 1 : 1
   first_name = ::Faker::Name.first_name
   last_name = ::Faker::Name.last_name
   User.create(
@@ -69,6 +70,11 @@ def check_all_trackers
   all_passed = true
   count = {true: 0, false: 0}
   UserScoreTracker.all.each do |tracker|
+    passed = tracker.refresh
+    count[passed.to_s.to_sym] += 1
+    all_passed = false unless passed
+  end
+  PurchaseTracker.all.each do |tracker|
     passed = tracker.refresh
     count[passed.to_s.to_sym] += 1
     all_passed = false unless passed

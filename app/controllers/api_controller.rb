@@ -33,7 +33,8 @@ class ApiController < ApplicationController
       server_error = 'Server: Passwords must match.'
     end
     upline = User.where(solution_number: params[:referralIdField].upcase).first
-    if upline
+
+  if upline
       user = upline.downlines.new(
         first_name: params[:firstNameField],
         last_name: params[:lastNameField],
@@ -68,7 +69,25 @@ class ApiController < ApplicationController
     if user.present?
       response.headers['Authorization-Success'] = 'true'
       response.headers["Authorization-Code"] = user.generate_authorization_for_game_code(game_code)
-      user.new_score_for_game_code(params[:username], game_code, params[:score].to_i)
+      user.new_score_for_game_code("#{user.first_name}#{user.id}", game_code, params[:score].to_i)
+    else
+      response.headers['Authorization-Success'] = 'false'
+    end
+
+    respond_to do |format|
+      format.json { head :no_content }
+    end
+  end
+
+  def new_purchase
+    game_code = request.headers['Game-Identifier']
+    auth_code = request.headers['Authorization-Code']
+    user = user_from_game_authorization(game_code, auth_code)
+
+    if user.present?
+      response.headers['Authorization-Success'] = 'true'
+      response.headers["Authorization-Code"] = user.generate_authorization_for_game_code(game_code)
+      user.new_purchase_for_game_code(game_code, (params[:purchase_price].to_f * 100).round)
     else
       response.headers['Authorization-Success'] = 'false'
     end

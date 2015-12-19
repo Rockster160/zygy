@@ -9,6 +9,7 @@
 #  created_at :datetime
 #  updated_at :datetime
 #  username   :string(255)
+#  level      :integer
 #
 
 class UserGameScore < ActiveRecord::Base

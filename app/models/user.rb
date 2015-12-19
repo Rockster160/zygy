@@ -54,6 +54,7 @@ class User < ActiveRecord::Base
   has_many :user_score_trackers
   has_many :security_keys
   has_many :purchases
+  has_many :purchase_trackers
 
   def scores; user_game_scores; end
 
@@ -71,11 +72,22 @@ class User < ActiveRecord::Base
   def scores_for_game_id(game_id)
     scores.where(game_id: game_id).order(created_at: :desc)
   end
+  def purchases_for_game_id(game_id)
+    purchases.where(game_id: game_id).order(created_at: :desc)
+  end
+  def purchase_total_for_game_id(game_id)
+    purchases.where(game_id: game_id).inject(0) { |sum, purchase| sum + purchase.amount }
+  end
 
   def new_score_for_game_code(username, game_code, score)
     game = Game.by_code(game_code)
     return false unless game
     scores.where(game_id: game.id).create(score: score, username: username)
+  end
+  def new_purchase_for_game_code(game_code, purchase)
+    game = Game.by_code(game_code)
+    return false unless game
+    purchases.where(game_id: game.id).create(amount: purchase)
   end
 
   def generate_authorization_for_game_code(game_code)
@@ -88,10 +100,17 @@ class User < ActiveRecord::Base
   def scores_at_level_for_game_id(x, game_id)
     downlines_by(x).inject(0) { |sum, user| sum + user.high_score_for_game_id(game_id) }
   end
+  def purchases_at_level_for_game_id(x, game_id)
+    downlines_by(x).inject(0) { |sum, user| sum + user.purchases_for_game_id(game_id) }
+  end
 
   def scores_thru_level_for_game_id(x, game_id)
     return self.high_score_for_game_id(game_id) if x == 0
     self.high_score_for_game_id(game_id) + all_downlines_by(x).inject(0) { |sum, user| sum + user.high_score_for_game_id(game_id) }
+  end
+  def purchases_thru_level_for_game_id(x, game_id)
+    return self.purchases_for_game_id(game_id) if x == 0
+    self.purchases_for_game_id(game_id) + all_downlines_by(x).inject(0) { |sum, user| sum + user.purchases_for_game_id(game_id) }
   end
 
   def address(string_format='%s1 %s2 %c, %S, %z %C')
@@ -154,7 +173,6 @@ class User < ActiveRecord::Base
     end
     total
   end
-
   def count_levels_down
     all_downlines.group_by(&:count_levels_up).keys.sort.last
   end
