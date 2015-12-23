@@ -16,7 +16,7 @@
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #  name                   :string(255)
-#  solution_number        :string(255)
+#  zygy_id                :string(255)
 #  upline_id              :integer
 #  first_name             :string(255)
 #  last_name              :string(255)
@@ -52,7 +52,7 @@ class User < ActiveRecord::Base
   has_many :downlines, class_name: 'User', foreign_key: 'upline_id'
   has_many :user_games
 
-  after_create :set_solution_number
+  after_create :set_zygy_id
 
   def game(game_id)
     user_games.where(game_id: game_id).first_or_create
@@ -164,8 +164,8 @@ class User < ActiveRecord::Base
 
   private
 
-  def set_solution_number
-    self.update(solution_number: id.to_s(36).upcase.rjust(6, '0'))
+  def set_zygy_id
+    self.update(zygy_id: id.to_s(36).upcase.rjust(6, '0'))
   end
 
 end

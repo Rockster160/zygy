@@ -21,6 +21,26 @@ class UserGame < ActiveRecord::Base
   has_many :purchases
   has_many :purchase_trackers
 
+  validate :username_available?
+  validate :username_valid?
+
+  def username_available?
+    return false unless username
+    if self.class.where(game_id: self.game_id).where("lower(username) = ?", username.downcase).any?
+      errors.add(:username, "Sorry, that username was already taken.")
+    end
+  end
+
+  def username_valid?
+    return false unless username
+    unless (username =~ /[^a-zA-Z0-9\-\_]/).nil?
+      errors.add(:username, "Username cannot contain special characters. User only alphanumeric(a-z, 1-9), dashes (-), and underscores (_) only.")
+    end
+    unless username.length > 2 || username.length < 20
+      errors.add(:username, "Username must be between 2 and 20 characters.")
+    end
+  end
+
   def scores; user_game_scores; end
 
   def high_score

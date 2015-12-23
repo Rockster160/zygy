@@ -26,9 +26,8 @@ group :development, :test do
   gem 'annotate'
   gem 'better_errors'
   gem 'binding_of_caller'
-  gem 'pry-byebug'
   gem 'pry-rails'
-  gem 'pry-nav'
+  gem 'pry-byebug'
   gem 'spring-commands-rspec'
   gem 'better_errors'
   gem 'simplecov', :require => false, :group => :test

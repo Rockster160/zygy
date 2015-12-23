@@ -46,7 +46,7 @@ class AdminController < ApplicationController
     user_game = user.game(@game.id)
     score = user_game.high_score
     {
-      name: "#{user.first_name} #{user.last_name} - #{user.solution_number}",
+      name: "#{user.first_name} #{user.last_name} - #{user.zygy_id}",
       username: "#{user.username_for_game_id(@game.id).presence || 'No Username'}",
       personal: score == 0 ? "Never Played" : score,
       user_id: user.id,

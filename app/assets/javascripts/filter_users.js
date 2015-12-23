@@ -21,15 +21,15 @@ $(document).ready(function() {
   })
 
   $('tbody')
-    .on('mouseover', '.highlight-solution', function() {
+    .on('mouseover', '.highlight-zygy-id', function() {
       if ($(this).html().trim().length > 0) {
-        $('.highlight-solution:contains("' + $(this).children().html() + '")').css('background', 'orange');
+        $('.highlight-zygy-id:contains("' + $(this).children().html() + '")').css('background', 'orange');
         $(this).css('background', 'red');
       }
     })
-    .on('mouseleave', '.highlight-solution', function() {
+    .on('mouseleave', '.highlight-zygy-id', function() {
       if ($(this).html().trim().length > 0) {
-        $('.highlight-solution:contains("' + $(this).children().html() + '")').css('background', 'inherit');
+        $('.highlight-zygy-id:contains("' + $(this).children().html() + '")').css('background', 'inherit');
         $(this).css('background', 'inherit');
       }
     })
