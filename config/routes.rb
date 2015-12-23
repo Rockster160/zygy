@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   post '/api/sign_in' => 'api#verify_login_information'
   post '/api/register' => 'api#register_new_user'
   post '/api/new_score' => 'api#new_score'
+  post '/api/new_purchase' => 'api#new_purchase'
 
   get 'filtered_users' => 'admin#filtered_users_table'
 
